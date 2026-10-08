@@ -1,0 +1,56 @@
+# Publishes prebuilt `pst` binaries when a version tag is pushed:
+#   git tag v0.1.0 && git push origin v0.1.0
+# The tag must match "version" in package.json. install.sh downloads from the latest release.
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun test
+      - name: Tag matches package.json version
+        run: test "v$(jq -r .version package.json)" = "$GITHUB_REF_NAME"
+      - run: bun run build:all
+      - name: Ad-hoc sign the macOS binaries
+        run: for f in dist/pst-darwin-*; do codesign --force --sign - "$f"; done
+      - run: ./dist/pst-darwin-arm64 --version
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: dist/pst-*
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: dist
+      - run: chmod +x dist/pst-* && ./dist/pst-linux-x64 --version
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum pst-* > checksums.txt && cat checksums.txt
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" dist/pst-* dist/checksums.txt
+          --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes

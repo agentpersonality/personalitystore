@@ -1,0 +1,25 @@
+{
+  "name": "personalitystore",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Encrypted personal vault (personality, details, taste, dated logbook) that your own agents read over MCP with scoped tokens.",
+  "repository": "github:agentpersonality/personalitystore",
+  "type": "module",
+  "bin": {
+    "pst": "src/bin/pst.ts"
+  },
+  "engines": {
+    "bun": ">=1.2.0"
+  },
+  "scripts": {
+    "pst": "bun src/bin/pst.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "build": "bun scripts/build.ts",
+    "build:all": "bun scripts/build.ts --all"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "typescript": "^7.0.2"
+  }
+}
