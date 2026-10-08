@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Encrypted personal vault (personality, details, taste, dated logbook) that your own agents read over MCP with scoped tokens.",
+  "license": "MIT",
   "repository": "github:agentpersonality/personalitystore",
   "type": "module",
   "bin": {

@@ -1,8 +1,10 @@
 # ADR 001: How personalitystore works
 
-author: @raashidanwar
-created: 08-10-2026
-status: approved
+***Author: @raashidanwar***
+
+***Created: 08-10-2026***
+
+***Status: Approved***
 
 ## Motivation
 

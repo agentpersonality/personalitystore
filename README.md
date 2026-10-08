@@ -172,3 +172,7 @@ are in `test/`.
 
 The release workflow (`.github/workflows/release.yml`) tests, builds and ad-hoc signs the binaries,
 writes `checksums.txt`, and publishes a GitHub release. `install.sh` always fetches the latest release.
+
+## License
+
+[MIT](LICENSE)
